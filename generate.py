@@ -106,7 +106,7 @@ def replace_redundant_parenthesis(values):
     return values
 
 
-if __name__ == "__main__":
+def main():
     with open(sys.argv[1], 'rb') as f:
         content = f.read()
         content = content.split(b'\r\n')
@@ -128,4 +128,7 @@ if __name__ == "__main__":
     content = replace_redundant_parenthesis(content)
 
     # print('\n'.join(generate_c_code(content)))
-    print('\n'.join(generate_rust_code(content)))
+    return '\n'.join(generate_rust_code(content))
+
+if __name__ == "__main__":
+    print(main())
