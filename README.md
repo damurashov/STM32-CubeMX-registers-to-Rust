@@ -24,4 +24,4 @@ Stage 1 - parse define constants
 
 Stage 2 - parse register offsets
 
-1. Unlike the the previous ones, register offsets are mapped onto memory through use of C structs. So the parser matches the structs that follow `typedef struct {...} *_TypeDef` pattern, parses the body of the structure, calculate offsets using the type of the structure's member, and translate that into Rust code. On the offset calculation stage, type of the struct's member **is taken into account**, so a member defined as `uint16_t` will not erroneously advance the accumulated offset by `0x4`.
+1. Unlike the the previous ones, register offsets are mapped onto memory through use of C structs. So the parser matches the structs that follow `typedef struct {...} *_TypeDef` pattern, parses the body of the structure, calculates the offsets using the type of the structure's member, and translates that into Rust code. On the offset calculation stage, type of the struct's member **is taken into account**, so a member defined as `uint16_t` will not erroneously advance the accumulated offset by `0x4`.
