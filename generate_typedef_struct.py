@@ -28,12 +28,20 @@ def body_iter_identifiers(body):
         yield m
 
 
-def body_lines_get_offsets(body_lines):
+def body_get_offsets(body):
     """
     @return [(identifier, offset), ... ]
     """
     ret = []
     offset = 0x0
+
+    for match in body_iter_identifiers(body):
+        offset_inc = int(match.group(1))
+        identifier = match.group(2)
+        ret.append((identifier, int(offset / 4)))
+        offset += offset_inc
+
+    return ret
 
 
 def body_get_body_lines(body):
@@ -61,6 +69,7 @@ if __name__ == "__main__":
         body = t.group(1)
         # body = body_get_body_lines(body)
         body_test_print_identifiers(body)
+        print(body_get_offsets(body))
         identifier = t.group(2)
         identifier = identifier_get_register_name(identifier)
         # print(body)
