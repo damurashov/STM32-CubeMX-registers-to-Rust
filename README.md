@@ -1,4 +1,4 @@
-# Convert STM's CubeMX generated register macro to Rust code
+# Convert STM's CubeMX generated register macros to Rust code
 
 Heuristic ad-hoc code translator. Parses register values from CubeMX-generated C-files, filters out missing identifiers, and converts parsed values into valid Rust code. As a result, you will get something like:
 
