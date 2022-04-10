@@ -1,6 +1,8 @@
 import sys
 import re
 
+RE_IDENTIFIER = r"\b([a-zA-Z_][a-zA-Z0-9_]+)"
+
 def filter_define(content):
    return list(filter(lambda s: '#define' in s, content))
 
@@ -56,7 +58,7 @@ def filter_missing_values(content):
     res = []
 
     for c in content:
-        mentioned = re.search(r"\b([a-zA-Z_][a-zA-Z0-9_]+)", c[1])
+        mentioned = re.search(RE_IDENTIFIER, c[1])
 
         if mentioned is not None:
             if not all([ref in identifiers for ref in mentioned.groups()]):
@@ -73,6 +75,22 @@ def generate_c_code(content):
 
 def generate_rust_code(content):
     return [f"const {c[0]}: u32 = {c[1]};" for c in content]
+
+
+def transform_identifiers_upper(values):
+    res = []
+
+    for v in values:
+        v[0] = v[0].upper()
+
+        for ident in re.compile(RE_IDENTIFIER).finditer(v[1]):
+            span = ident.span()
+            fragment = v[1][span[0]:span[1]]
+            v[1] = v[1].replace(fragment, fragment.upper())
+
+        res.append(v)
+
+    return res
 
 
 if __name__ == "__main__":
@@ -93,6 +111,7 @@ if __name__ == "__main__":
     content = replace_define(content)
     content = parse_values(content)
     content = filter_missing_values(content)
+    content = transform_identifiers_upper(content)
 
     # print('\n'.join(generate_c_code(content)))
     print('\n'.join(generate_rust_code(content)))
