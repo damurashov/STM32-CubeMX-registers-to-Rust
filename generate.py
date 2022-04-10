@@ -93,6 +93,19 @@ def transform_identifiers_upper(values):
     return res
 
 
+def replace_redundant_parenthesis(values):
+    for v in values:
+        v[1] = v[1].strip()
+
+        if '(' == v[1][0]:
+            v[1] = v[1][1:]
+
+        if ')' == v[1][-1]:
+            v[1] = v[1][:-1]
+
+    return values
+
+
 if __name__ == "__main__":
     with open(sys.argv[1], 'rb') as f:
         content = f.read()
@@ -112,6 +125,7 @@ if __name__ == "__main__":
     content = parse_values(content)
     content = filter_missing_values(content)
     content = transform_identifiers_upper(content)
+    content = replace_redundant_parenthesis(content)
 
     # print('\n'.join(generate_c_code(content)))
     print('\n'.join(generate_rust_code(content)))
