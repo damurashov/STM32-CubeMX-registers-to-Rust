@@ -22,7 +22,7 @@ def iter_typedef_struct(text):
 
 def body_line_iter_identifiers(body_line):
     re_int = r"u?int([0-9]+)_t"
-    re_complete = re_int + r'\s' + RE_IDENTIFIER
+    re_complete = re_int + r'\s' + RE_IDENTIFIER + r"[^\n]+\n"
 
     for m in re.compile(re_complete).finditer(body_line):
         yield m
