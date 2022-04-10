@@ -20,11 +20,11 @@ def iter_typedef_struct(text):
         yield(m)
 
 
-def body_line_iter_identifiers(body_line):
+def body_iter_identifiers(body):
     re_int = r"u?int([0-9]+)_t"
     re_complete = re_int + r'\s' + RE_IDENTIFIER + r"[^\n]+\n"
 
-    for m in re.compile(re_complete).finditer(body_line):
+    for m in re.compile(re_complete).finditer(body):
         yield m
 
 
@@ -44,7 +44,7 @@ def body_get_body_lines(body):
 
 
 def body_test_print_identifiers(body):
-    for match in body_line_iter_identifiers(body):
+    for match in body_iter_identifiers(body):
         print(match)
         print(match.group(1))
         print(match.group(2))
