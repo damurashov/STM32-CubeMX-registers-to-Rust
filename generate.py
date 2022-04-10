@@ -75,7 +75,7 @@ def generate_c_code(content):
 
 
 def generate_rust_code(content):
-    return [f"const {c[0]}: u32 = {c[1]}; {c[2]}" for c in content]
+    return [f"const {c[0]}: u32 = {c[1]};" for c in content]
 
 
 if __name__ == "__main__":
