@@ -25,7 +25,7 @@ def replace_comments(content):
 
 def replace_string_literals(content):
     def repl(ln):
-        return re.sub(r"\b((?:0x)?[0-9]+)UL", r"\1u32", ln)
+        return re.sub(r"\b((?:0x)?[0-9ABCDEF]+)UL?", r"\1u32", ln)
 
     return [repl(c) for c in content]
 
