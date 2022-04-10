@@ -44,6 +44,22 @@ def body_get_offsets(body):
     return ret
 
 
+def body_iter_offset_pair(body):
+    """
+    @yield (identifier, offset), ...
+    """
+    offset = 0x0
+
+    for match in body_iter_identifiers(body):
+        offset_inc = int(match.group(1))
+        identifier = match.group(2)
+
+        yield identifier, int(offset / 8)
+
+        offset += offset_inc
+
+
+
 def body_get_body_lines(body):
     body = body.replace('\r', '')
     body = body.split('\n')
@@ -62,18 +78,31 @@ def identifier_get_register_name(identifier):
     return identifier.replace('_TypeDef', '')
 
 
+def ro_generate_rust_line(register, offset_pair):
+    return f"const {register.upper()}_{offset_pair[0].upper()}_OFFSET: u32 = {hex(offset_pair[1])};"
+
+
+def ros_iter_rust_line(register, offset_pairs):
+    for offset_pair in offset_pairs:
+        yield ro_generate_rust_line(register, offset_pair)
+
+
+def text_iter_rust_line(text):
+    for t in text_iter_typedef_struct(text):
+        identifier = t.group(2)
+        register = identifier_get_register_name(identifier)
+        body = t.group(1)
+
+        for offset_pair in body_iter_offset_pair(body):
+            yield ro_generate_rust_line(register, offset_pair)
+
+
+def text_generate_rust_code(text):
+    return list(text_iter_rust_line(text))
+
+
 if __name__ == "__main__":
     text = command_output(f"cat {sys.argv[1]}")
 
-    for t in text_iter_typedef_struct(text):
-        body = t.group(1)
-        # body = body_get_body_lines(body)
-        body_test_print_identifiers(body)
-        print(body_get_offsets(body))
-        identifier = t.group(2)
-        identifier = identifier_get_register_name(identifier)
-        # print(body)
-        # print(identifier)
-        # begin = t.span()[0]
-        # end = t.span()[1]
-        # print(text[begin:end])
+    for rl in text_iter_rust_line(text):
+        print(rl)
