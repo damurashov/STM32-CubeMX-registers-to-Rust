@@ -13,9 +13,6 @@ def filter_typedef(content):
 def filter_private(content):
     return list(filter(lambda s: "__" not in s, content))
 
-def filter_tamper(content):
-    return list(filter(lambda s: "TAMPER not in s", content))
-
 def replace_comments(content):
     content = [c.replace('/*', '//') for c in content]
     content = [c.replace('*/', '') for c in content]
@@ -90,7 +87,6 @@ if __name__ == "__main__":
     content = filter_is(content)
     content = filter_typedef(content)
     content = filter_private(content)
-    content = filter_tamper(content)
     content = replace_comments(content)
     content = replace_string_literals(content)  # Should be replaced w/ u32 suffix for rust code generation
     content = replace_excessive_space(content)
