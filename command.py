@@ -3,7 +3,6 @@ from shlex import split
 
 
 def command_output(cmd):
-	print('>  ' + cmd)
 	ret = subprocess.run(split(cmd), stdout=subprocess.PIPE)
 
 	if ret.returncode != 0:
