@@ -24,7 +24,7 @@ def replace_comments(content):
 
 def replace_string_literals(content):
     def repl(ln):
-        return re.sub(r"\b((?:0x)?[0-9ABCDEF]+)UL?", r"\1u32", ln)
+        return re.sub(r"\b((?:0x)?[0-9ABCDEF]+)UL?", r"\1usize", ln)
 
     return [repl(c) for c in content]
 
@@ -74,7 +74,7 @@ def generate_c_code(content):
 
 
 def generate_rust_code(content):
-    return ["#![allow(dead_code)]"] + [f"pub const {c[0]}: u32 = {c[1]};" for c in content]
+    return ["#![allow(dead_code)]"] + [f"pub const {c[0]}: usize = {c[1]};" for c in content]
 
 
 def transform_identifiers_upper(values):
@@ -119,7 +119,7 @@ def main():
     content = filter_typedef(content)
     content = filter_private(content)
     content = replace_comments(content)
-    content = replace_string_literals(content)  # Should be replaced w/ u32 suffix for rust code generation
+    content = replace_string_literals(content)  # Should be replaced w/ usize suffix for rust code generation
     content = replace_excessive_space(content)
     content = replace_define(content)
     content = parse_values(content)

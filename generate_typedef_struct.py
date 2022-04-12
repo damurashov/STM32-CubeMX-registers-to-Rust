@@ -79,7 +79,7 @@ def identifier_get_register_name(identifier):
 
 
 def ro_generate_rust_line(register, offset_pair):
-    return f"pub const {register.upper()}_{offset_pair[0].upper()}_OFFSET: u32 = {hex(offset_pair[1])};"
+    return f"pub const {register.upper()}_{offset_pair[0].upper()}_OFFSET: usize = {hex(offset_pair[1])};"
 
 
 def ros_iter_rust_line(register, offset_pairs):
