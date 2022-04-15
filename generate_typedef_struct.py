@@ -28,22 +28,6 @@ def body_iter_identifiers(body):
         yield m
 
 
-def body_get_offsets(body):
-    """
-    @return [(identifier, offset), ... ]
-    """
-    ret = []
-    offset = 0x0
-
-    for match in body_iter_identifiers(body):
-        offset_inc = int(match.group(1))
-        identifier = match.group(2)
-        ret.append((identifier, int(offset / 4)))
-        offset += offset_inc
-
-    return ret
-
-
 def body_iter_offset_pair(body):
     """
     @yield (identifier, offset), ...
