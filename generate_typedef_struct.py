@@ -23,7 +23,7 @@ def text_iter_typedef_struct(text):
 
 def body_iter_identifiers(body):
     re_int = r"u?int([0-9]+)_t"
-    re_complete = re_int + r'\s+' + RE_IDENTIFIER + r'[^\[\n]*' + RE_ARRAY + r"[^\n]+\n"
+    re_complete = re_int + r'\s+' + RE_IDENTIFIER + r'\s*' + RE_ARRAY + r"[^\n]+\n"
 
     for m in re.compile(re_complete).finditer(body):
         # print(m.groups())
