@@ -61,6 +61,7 @@ def body_test_print_identifiers(body):
 def identifier_get_register_name(identifier):
     identifier = identifier.replace('_TypeDef', '')
     identifier = identifier.replace('_Type', '')
+    return identifier
 
 
 def ro_generate_rust_line(register, offset_pair):
