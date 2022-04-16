@@ -11,7 +11,7 @@ def process_typedef_struct(typedef):
 
 def text_iter_typedef_struct(text):
     re_preamble = r"typedef\s+struct.*\n"
-    re_body = r"{((?:[^\}]+\n)+)\}\s?"
+    re_body = r"{((?:[^\}]+\n)+)\}\s*"
     re_typedef_name = r'(' + RE_IDENTIFIER + r')' + r";"
     re_complete = re_preamble + re_body + re_typedef_name
 
