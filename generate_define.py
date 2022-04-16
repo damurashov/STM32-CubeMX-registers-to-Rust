@@ -74,7 +74,7 @@ def generate_c_code(content):
 
 
 def generate_rust_code(content):
-    return ["#![allow(dead_code)]"] + [f"pub const {c[0]}: usize = {c[1]};" for c in content]
+    return [f"pub const {c[0]}: usize = {c[1]};" for c in content]
 
 
 def transform_identifiers_upper(values):

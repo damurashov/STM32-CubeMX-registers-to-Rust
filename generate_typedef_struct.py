@@ -3,6 +3,7 @@ import sys
 from command import command_output
 
 RE_IDENTIFIER = r"\b([a-zA-Z_][a-zA-Z0-9_]+)"
+RE_ARRAY = r"(?:\[([0-9]+))?"
 
 def process_typedef_struct(typedef):
     print(typedef)
@@ -10,7 +11,7 @@ def process_typedef_struct(typedef):
 
 def text_iter_typedef_struct(text):
     re_preamble = r"typedef\s+struct.*\n"
-    re_body = r"{((?:[^\}]+\n)+)\}\s?"
+    re_body = r"{((?:[^\}]+\n)+)\}\s*"
     re_typedef_name = r'(' + RE_IDENTIFIER + r')' + r";"
     re_complete = re_preamble + re_body + re_typedef_name
 
@@ -22,9 +23,10 @@ def text_iter_typedef_struct(text):
 
 def body_iter_identifiers(body):
     re_int = r"u?int([0-9]+)_t"
-    re_complete = re_int + r'\s' + RE_IDENTIFIER + r"[^\n]+\n"
+    re_complete = re_int + r'\s+' + RE_IDENTIFIER + r'\s*' + RE_ARRAY + r"[^\n]+\n"
 
     for m in re.compile(re_complete).finditer(body):
+        # print(m.groups())
         yield m
 
 
@@ -38,10 +40,13 @@ def body_iter_offset_pair(body):
         offset_inc = int(match.group(1))
         identifier = match.group(2)
 
-        yield identifier, int(offset / 8)
-
-        offset += offset_inc
-
+        if match.group(3) is None:
+            yield identifier, int(offset / 8)
+            offset += offset_inc
+        else:
+            for i in range(int(match.group(3))):
+                yield identifier  + '_' + str(i), int(offset / 8)
+                offset += offset_inc
 
 
 def body_get_body_lines(body):
@@ -59,7 +64,9 @@ def body_test_print_identifiers(body):
 
 
 def identifier_get_register_name(identifier):
-    return identifier.replace('_TypeDef', '')
+    identifier = identifier.replace('_TypeDef', '')
+    identifier = identifier.replace('_Type', '')
+    return identifier
 
 
 def ro_generate_rust_line(register, offset_pair):
