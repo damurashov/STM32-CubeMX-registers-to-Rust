@@ -2,7 +2,7 @@ import sys
 import re
 from command import command_output
 
-RE_IDENTIFIER = r"\b([a-zA-Z_][a-zA-Z0-9_]+)"
+RE_IDENTIFIER = r"\b([a-zA-Z_][a-zA-Z0-9_]*)"
 RE_IDENTIFIER_NOMATCH = r"\b[a-zA-Z_][a-zA-Z0-9_]+"
 RE_SPACE = r"\s*"
 RE_NUMERIC = r"\b((?:0x)?[0-9]+)\b"
