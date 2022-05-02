@@ -126,21 +126,26 @@ def text_parse_braced_or_identifier(text):
     text = text.strip()
     ret = ''
 
-    if text[0].isalnum() or text[0] in ['(',]:
-        for t in text:
-            should_break = brace_balance == 0 and t.isspace()
+    if len(text):
+        if text[0].isalnum() or text[0] in ['(',]:
+            for t in text:
+                should_break = brace_balance == 0 and t.isspace()
 
-            if should_break:
-                break
+                if should_break:
+                    break
 
-            if '(' == t:
-                brace_balance -= 1
-            elif ')' == t:
-                brace_balance += 1
-            else:
-                ret += t
+                if '(' == t:
+                    brace_balance -= 1
+                elif ')' == t:
+                    brace_balance += 1
+                else:
+                    ret += t
 
-    return ret
+    return ret if 0 == brace_balance else ''
+
+
+def text_remove_c_comments(text):
+    return re.sub(r"/\\*.*?\\*/", "", text)
 
 
 def text_parse_numeric_remove_suffix(text):
@@ -152,7 +157,9 @@ def text_parse_define_kv(text):
     re_valstring = r"^\#define" + RE_SPACE + RE_IDENTIFIER + RE_SPACE + r"([^\n]+)" + r"\n"
 
     for m in re.compile(re_valstring, re.MULTILINE).finditer(text):
-        val = text_parse_braced_or_identifier(m.group(2))
+        val = m.group(2)
+        val = text_remove_c_comments(val)
+        val = text_parse_braced_or_identifier(val)
 
         if len(val):
             yield m.group(1), text_parse_numeric_remove_suffix(val)
