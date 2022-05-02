@@ -126,18 +126,19 @@ def text_parse_braced_or_identifier(text):
     text = text.strip()
     ret = ''
 
-    for t in text:
-        should_break = brace_balance == 0 and t.isspace()
+    if text[0].isalnum() or text[0] in ['(',]:
+        for t in text:
+            should_break = brace_balance == 0 and t.isspace()
 
-        if should_break:
-            break
+            if should_break:
+                break
 
-        if '(' == t:
-            brace_balance -= 1
-        elif ')' == t:
-            brace_balance += 1
-        else:
-            ret += t
+            if '(' == t:
+                brace_balance -= 1
+            elif ')' == t:
+                brace_balance += 1
+            else:
+                ret += t
 
     return ret
 
@@ -177,7 +178,10 @@ def kvlist_transform_remove_missing_identifiers(kvlist):
 
 def kvlist_transform_uppercase(kvlist):
     for k, v in kvlist:
-        yield k.upper(), v.upper()
+        key, value = k.upper(), v.upper()
+        value = re.sub(r"\b0X", '0x', value)
+
+        yield key, value
 
 
 def kvlist_get_rustlines(kvlist):
